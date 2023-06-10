@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 const messages = [
   'Learn React ⚛️',
   'Apply for jobs 💼',
@@ -5,26 +7,69 @@ const messages = [
 ]
 
 export default function App() {
-  const step = 1
   return (
-    <div className="steps">
-      <div className="numbers">
-        <div class={`${step >= 1 ? 'active' : ''}`}>1</div>
-        <div class={`${step >= 2 ? 'active' : ''}`}>2</div>
-        <div class={`${step >= 3 ? 'active' : ''}`}>3</div>
-      </div>
-      <p className="message">
-        Step {step}: {messages[step - 1]}
-      </p>
-
-      <div className="buttons">
-        <button style={{ backgroundColor: '#7950f2', color: '#fff' }}>
-          Previous
-        </button>
-        <button style={{ backgroundColor: '#7950f2', color: '#fff' }}>
-          Next
-        </button>
-      </div>
+    <div>
+      <Steps />
     </div>
+  )
+}
+
+function Steps() {
+  const [step, setStep] = useState(1)
+  const [isOpen, setIsOpen] = useState(true)
+
+  function handlePrevious() {
+    if (step > 1) setStep(s => s - 1)
+  }
+  function handleNext() {
+    if (step < 3) setStep(s => s + 1)
+  }
+
+  return (
+    <>
+      <button
+        className="close"
+        onClick={() => setIsOpen(currIsOpen => !currIsOpen)}
+      >
+        &times;
+      </button>
+
+      {isOpen && (
+        <div className="steps">
+          <div className="numbers">
+            <div className={step >= 1 ? 'active' : ''}>1</div>
+            <div className={step >= 2 ? 'active' : ''}>2</div>
+            <div className={step >= 3 ? 'active' : ''}>3</div>
+          </div>
+          <p className="message">
+            Step {step}: {messages[step - 1]}
+          </p>
+
+          <div className="buttons">
+            <Button
+              handleClick={handlePrevious}
+              bgColor="#7950f2"
+              textColor="#fff"
+            >
+              <span>⬅️</span> Previus
+            </Button>
+            <Button handleClick={handleNext} bgColor="#7950f2" textColor="#fff">
+              Next <span>➡️</span>
+            </Button>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+function Button({ handleClick, bgColor, textColor, children }) {
+  return (
+    <button
+      style={{ backgroundColor: bgColor, color: textColor }}
+      onClick={handleClick}
+    >
+      {children}
+    </button>
   )
 }
